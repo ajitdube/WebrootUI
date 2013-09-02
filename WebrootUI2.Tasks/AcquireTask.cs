@@ -82,7 +82,7 @@ namespace WebrootUI2.Tasks
                          where (
                              (name == string.Empty || u.name.ToLower().Contains(name.Trim().ToLower())) &&
                              (LogicalId == 0 || u.LogicalId == LogicalId))
-                         select u).Where(x=>x.IsDeleted==false).ToList<Acquire>();
+                         select u).ToList<Acquire>();
 
                 return users;
             }
@@ -103,7 +103,7 @@ namespace WebrootUI2.Tasks
             try
             {
                 users = AquireRepo.GetAll()
-                    .Where(u => u.IsDeleted != true)
+                    .Where(u => u.IsDeleted != null)
                     .ToList<Acquire>();
 
                 return users;

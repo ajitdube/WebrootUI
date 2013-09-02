@@ -50,7 +50,7 @@
             routes.MapRoute(
                "Default",                                              // Route name
                "{controller}/{action}/{id}",                           // URL with parameters
-               new { controller = "Admin", action = "LoginAction", id = "" }
+               new { controller = "Admin", action = "LoginAction", id = "" } 
            );
         }
     }

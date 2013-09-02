@@ -182,6 +182,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="CastleWindsor\ComponentRegistrar.cs" />
+    <Compile Include="Controllers\AcquireController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
@@ -304,7 +305,6 @@
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Properties\PublishProfiles\asd.pubxml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\dataTables.customize.js" />
@@ -344,6 +344,8 @@
     <Content Include="Views\System\Audit.cshtml" />
     <Content Include="Views\System\Index.cshtml" />
     <Content Include="Views\Shared\PermissionDeniedError.cshtml" />
+    <Content Include="Views\Acquire\Acquire.cshtml" />
+    <Content Include="Views\Acquire\Index.cshtml" />
     <Content Include="Views\System\Acquire.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -369,7 +371,9 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Views\Shared\_Layout.cshtml" />
