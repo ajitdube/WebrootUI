@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -262,7 +262,6 @@ namespace WebrootUI2.Web.Mvc.Controllers
 
             users = cachedAcquireModel.Acquire.Skip((index - 1) * Setting.Page_Size).Take(Setting.Page_Size).ToList<AcquireModel>();
             count = cachedAcquireModel.Acquire.Count;
-
             return Json(new { status = "success", usersList = users, currentIndex = index, recordsCount = count }, JsonRequestBehavior.AllowGet);
         }
 
@@ -311,7 +310,7 @@ namespace WebrootUI2.Web.Mvc.Controllers
         /// delete data from the  Acquire list 
         /// </summary>
         [HttpGet]
-        public JsonResult delAcqurie(string acquireid)
+        public JsonResult delAcqurie(string acquireid, int curIndex)
         {
             var user = acquireTask.Delete(Convert.ToInt32(acquireid));
             var count = 0;
@@ -329,7 +328,7 @@ namespace WebrootUI2.Web.Mvc.Controllers
                 });
             }
             count = users.Count;
-            users = users.Take(Setting.Page_Size).ToList<AcquireModel>();
+            users = users.Skip((curIndex - 1) * Setting.Page_Size).Take(Setting.Page_Size).ToList<AcquireModel>();
 
             return Json(new { status = "success", usersList = users, recordsCount = count }, JsonRequestBehavior.AllowGet);
         }
@@ -369,7 +368,7 @@ namespace WebrootUI2.Web.Mvc.Controllers
         /// Update the data in the  Acquire list 
         /// </summary>
         [HttpGet]
-        public JsonResult AcquireUpdate(string AcquireId, string name, string logicalid, string enable)
+        public JsonResult AcquireUpdate(string AcquireId, string name, string logicalid, string enable, int curIndex)
         {
             var user = acquireTask.GetAcquiredata(Convert.ToInt32(AcquireId));
             user.name = name;
@@ -391,8 +390,8 @@ namespace WebrootUI2.Web.Mvc.Controllers
                 });
             }
             count = users.Count;
-            users = users.Take(Setting.Page_Size).ToList<AcquireModel>();
-
+            users = users.Skip((curIndex - 1) * Setting.Page_Size).Take(Setting.Page_Size).ToList<AcquireModel>();
+         
             return Json(new { status = "success", usersList = users, recordsCount = count }, JsonRequestBehavior.AllowGet);
         }
 
