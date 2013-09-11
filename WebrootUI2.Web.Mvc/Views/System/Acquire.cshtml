@@ -86,14 +86,10 @@
 <div id="editOnPage"> <p class="validateTips"></p>
 <form id="formAcquireEdt" >
 <fieldset>
-<div>
 <label for="name">@Resource.Usr_nm</label>
 <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
-</div>
-<div>
 <label for="Logicalid">@Resource.Usr_Logicalid</label>
 <input type="text" name="Logicalid" id="Logicalid" value="" class="text ui-widget-content ui-corner-all" maxlength="4" />
-</div>
 <label for="chkEnbl">@Resource.Usr_enable</label>
 <input type="checkbox" name="chkEnbl" id="chkEnbl" value="" class="text ui-widget-content ui-corner-all" />
 </fieldset>
@@ -112,12 +108,46 @@
             $.getJSON("/System/GetAcqurie", { acquireid: _id
             }, function (data) {
                 if (data.status == "success") {
+                    var name = $("#name"), password = $("#Logicalid"),
+                    allFields = $([]).add(name).add(password),
+                    tips = $(".validateTips");
+                    function updateTips(t) {
+                        tips.text(t).addClass("ui-state-highlight");
+                        setTimeout(function () {
+                            tips.removeClass("ui-state-highlight", 1500);
+                        }, 500);
+                    }
+                    function checkLength(o, n, min, max) {
+                        if (o.val().length > max || o.val().length < min) {
+                            o.addClass("ui-state-error");
+                            updateTips("Length of " + n + " must be between " + min + " and " + max + ".");
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                    function checkRegexp(o, regexp, n) {
+                        if (!(regexp.test(o.val()))) {
+                            o.addClass("ui-state-error");
+                            updateTips(n);
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
                     $("#editOnPage").dialog({
                         title: 'Update', autoOpen: false, modal: true, show: {
                             effect: "blind", duration: 1000 }, hide: {
                                 effect: "scale", duration: 1000
                             }, buttons: {
                                 "Update": function () {
+                                    var bValid = true;
+                                    allFields.removeClass("ui-state-error");
+                                    bValid = bValid && checkLength(name, "username", 3, 16);
+                                    bValid = bValid && checkLength(password, "'Logical Id'", 1, 4);
+                                    bValid = bValid && checkRegexp(name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter.");
+                                    bValid = bValid && checkRegexp(password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9");
+                                    if (bValid) {
                                         $.getJSON("/System/AcquireUpdate", {
                                             AcquireId: _id, name: $('#name').val(), logicalid: $('#Logicalid').val(), enable: $('#chkEnbl').is(":checked") ? true : false
                                         }, function (data) {
@@ -127,11 +157,15 @@
                                             }
                                         });
                                         $(this).dialog("close");
+                                    }
                                 },
                                 Cancel: function () {
                                     $(this).dialog("close");
                                 }
-                            }
+                            },
+                        close: function () {
+                            allFields.val("").removeClass("ui-state-error"); $(".validateTips").html("");
+                        }
                     });
                    $('#name').val(data.name); $('#Logicalid').val(data.logicalid);
                     //alert($('#chkEnbl').is(":checked"));alert(data.enable);
@@ -233,27 +267,6 @@
                 loadUsersTable(data.usersList, data.currentIndex, data.recordsCount);
         });
     }
-
-    //Validation user while update the record
-    $('#formAcquireEdt').validate({
-        rules: {
-            name: { required: true, minlength: 3 },
-            Logicalid: { required: true, number: true }
-        },
-        highlight: function (element) {
-            $(element).closest('div').addClass("f_error");
-            setTimeout(function () {
-            }, 200)
-        },
-        unhighlight: function (element) {
-            $(element).closest('div').removeClass("f_error");
-            setTimeout(function () {
-            }, 200)
-        },
-        errorPlacement: function (error, element) {
-            $(element).closest('div').append(error);
-        }
-    });
 
     //Validation user
     $('#formAcquire').validate({
